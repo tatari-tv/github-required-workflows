@@ -23,10 +23,9 @@ jobs:
         with:
           python-version: ${{env.PYTHON_VERSION}}
           cache-pre-commit: 'true'
-          cache: 'pip'
           pypi-username: ${{secrets.CI_USER_PYPI_USERNAME}}
           pypi-password: ${{secrets.CI_USER_PYPI_PASSWORD}}
-          packages: 'pre-commit=^3.1.1'
+          packages: 'pre-commit~=3.1.1'
       - name: create .pre-commit-config.yaml
         shell: bash
         run: |
