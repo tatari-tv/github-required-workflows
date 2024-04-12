@@ -38,3 +38,6 @@ jobs:
                 - id: end-of-file-fixer
                 - id: check-added-large-files
           EOF
+      - name: run pre-commit
+        shell: bash
+        run: pre-commit run --all-files
