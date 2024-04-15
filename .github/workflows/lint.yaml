@@ -37,6 +37,7 @@ jobs:
                 - id: trailing-whitespace
                 - id: end-of-file-fixer
                 - id: check-added-large-files
+                  exclude: '^philo/util/trial_accounts/data/.*\.csv$'
           EOF
       - name: run pre-commit
         shell: bash
