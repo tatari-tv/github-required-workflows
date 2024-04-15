@@ -1,4 +1,4 @@
-name: lint
+name: Tatari Org Lint
 
 on:
   pull_request:

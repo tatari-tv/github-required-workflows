@@ -1,4 +1,4 @@
-name: security
+name: Tatari Org Security
 
 on:
   pull_request:
