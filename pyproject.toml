@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "github-required-workflows"
+version = "0.0.0"
+description = ""
+authors = []
+
+[[tool.poetry.source]]
+name = "tatari"
+url = "https://pypi.tataridev.com/simple/"
+priority = "default"
+
+[[tool.poetry.source]]
+name = "PyPI"
+priority = "primary"
+
+[tool.poetry.dependencies]
+python = "~3.11"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^3.1.1"
+
+[tool.poetry-dynamic-versioning]
+enable = true
+style = 'pep440'
+
+[build-system]
+requires = ["poetry-core>=1.5.2", "poetry-dynamic-versioning"]
+build-backend = "poetry_dynamic_versioning.backend"
+
+[tool.black]
+line-length = 140
+skip-string-normalization = true
+target_version = ['py311']

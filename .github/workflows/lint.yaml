@@ -1,0 +1,44 @@
+name: Tatari Org Lint
+
+on:
+  pull_request:
+    types:
+      - 'opened'
+      - 'reopened'
+      - 'synchronize'
+
+permissions:
+  contents: read
+
+env:
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: tatari-tv/github-actions/checkout@v5
+      - uses: tatari-tv/github-actions/pip-install@v5
+        with:
+          python-version: ${{env.PYTHON_VERSION}}
+          cache-pre-commit: 'true'
+          pypi-username: ${{secrets.CI_USER_PYPI_USERNAME}}
+          pypi-password: ${{secrets.CI_USER_PYPI_PASSWORD}}
+          packages: 'pre-commit~=3.1.1'
+      - name: create .pre-commit-config.yaml
+        shell: bash
+        run: |
+          cat > .pre-commit-config.yaml <<EOF
+          repos:
+            - repo: https://github.com/pre-commit/pre-commit-hooks
+              rev: v4.1.0
+              hooks:
+                - id: trailing-whitespace
+                - id: end-of-file-fixer
+                - id: check-added-large-files
+                  exclude: '^philo/util/trial_accounts/data/.*\.csv$'
+          EOF
+      - name: run pre-commit
+        shell: bash
+        run: pre-commit run --all-files

@@ -1,0 +1,30 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - '**'
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-20.04
+    timeout-minutes: 10
+
+    steps:
+      - uses: tatari-tv/github-actions/checkout@v5
+      - id: setup
+        uses: tatari-tv/github-actions/poetry-install@v5
+        with:
+          cache-site-packages: true
+          python-version: '3.11'
+          poetry-version: '1.7.1'
+          pypi-username: ${{secrets.CI_USER_PYPI_USERNAME}}
+          pypi-password: ${{secrets.CI_USER_PYPI_PASSWORD}}
+          cache-pre-commit: 'true'
+      - name: Run pre-commit
+        run: make lint

@@ -1,0 +1,16 @@
+# See GitHub's documentation for more information on this file:
+# https://docs.github.com/en/code-security/supply-chain-security/keeping-your-dependencies-updated-automatically/configuration-options-for-dependency-updates
+version: 2
+registries:
+  github-tatari:
+    type: git
+    url: https://github.com
+    username: x-access-token
+    password: ${{secrets.ACTIONS_CLONE_SUBMODULE_TOKEN}}
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    registries:
+      - github-tatari
+    schedule:
+      interval: "weekly"
