@@ -38,6 +38,10 @@ jobs:
                 - id: end-of-file-fixer
                 - id: check-added-large-files
                   exclude: '^philo/util/trial_accounts/data/.*\.csv$'
+            - repo: https://github.com/tatari-tv/pre-commit-hooks
+              rev: v0.8.0
+              hooks:
+                - id: dockerfile-poetry
           EOF
       - name: run pre-commit
         shell: bash
