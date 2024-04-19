@@ -19,13 +19,19 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: tatari-tv/github-actions/checkout@v5
+      - name: create requirements-lint.txt
+        shell: bash
+        run: |
+          cat > requirements-lint.txt <<EOF
+          pre-commit~=3.1.1
+          EOF
       - uses: tatari-tv/github-actions/pip-install@v5
         with:
           python-version: ${{env.PYTHON_VERSION}}
           cache-pre-commit: 'true'
           pypi-username: ${{secrets.CI_USER_PYPI_USERNAME}}
           pypi-password: ${{secrets.CI_USER_PYPI_PASSWORD}}
-          packages: 'pre-commit~=3.1.1'
+          requirements: requirements-lint.txt
       - name: create .pre-commit-config.yaml
         shell: bash
         run: |
