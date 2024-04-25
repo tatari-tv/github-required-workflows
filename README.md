@@ -7,3 +7,7 @@ GitHub Actions Workflows designed to be run and required to pass on all `tatari-
 ## Required Status Checks
 
 A PR in this repo must be able to run all GitHub Actions workflows before it can be merged, as they will affect the Tatari organization repositories. This repo is excluded from the GitHub oragnization ruleset so that we can test any changes to these workflows as part of this repo's CI (as we do in other repositoryies).
+
+## Excluding Public Repos
+
+As this repository is private (and intended to stay that way), public repos need to be excluded from [this ruleset](https://github.com/organizations/tatari-tv/settings/rules/126206), otherwise they'll try and fail to run these workflows.
