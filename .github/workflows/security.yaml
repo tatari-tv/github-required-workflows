@@ -12,8 +12,8 @@ permissions:
   pull-requests: read
 
 jobs:
-  gitleaks:
-    name: Gitleaks
+  required-workflows-security:
+    name: Required Workflows Security
     runs-on: ubuntu-20.04
     steps:
       - uses: tatari-tv/github-actions/checkout@v5

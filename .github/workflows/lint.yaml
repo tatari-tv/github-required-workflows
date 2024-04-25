@@ -14,8 +14,8 @@ env:
   PYTHON_VERSION: '3.11'
 
 jobs:
-  lint:
-    name: Lint
+  required-workflows-lint:
+    name: Required Workflows Lint
     runs-on: ubuntu-20.04
     steps:
       - uses: tatari-tv/github-actions/checkout@v5
@@ -41,7 +41,9 @@ jobs:
               rev: v4.1.0
               hooks:
                 - id: trailing-whitespace
+                  exclude: '/.*\.snap$'
                 - id: end-of-file-fixer
+                  exclude: '/.*\.snap$'
                 - id: check-added-large-files
                   exclude: '^philo/util/trial_accounts/data/.*\.csv$'
           EOF
