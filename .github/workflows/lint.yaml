@@ -41,7 +41,9 @@ jobs:
               rev: v4.1.0
               hooks:
                 - id: trailing-whitespace
+                  exclude: '/.*\.snap$'
                 - id: end-of-file-fixer
+                  exclude: '/.*\.snap$'
                 - id: check-added-large-files
                   exclude: '^philo/util/trial_accounts/data/.*\.csv$'
           EOF
