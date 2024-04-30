@@ -38,12 +38,12 @@ jobs:
           set -x
           # create list of excluded patterns
           exclude_whitespace="
-          .*\.snap|
-          common/graphql/possibleTypes\.json
+                      .*\.snap|
+                      common/graphql/possibleTypes\.json
           "
 
           exclude_size="
-          philo/util/trial_accounts/data/.*\.csv
+                      philo/util/trial_accounts/data/.*\.csv
           "
 
           cat > .pre-commit-config.yaml <<EOF
@@ -53,19 +53,13 @@ jobs:
               hooks:
                 - id: trailing-whitespace
                   exclude: |
-                    (?x)^(
-                      ${exclude_whitespace}
-                    )$
+                    (?x)^(${exclude_whitespace})$
                 - id: end-of-file-fixer
                   exclude: |
-                    (?x)^(
-                      ${exclude_whitespace}
-                    )$
+                    (?x)^( ${exclude_whitespace})$
                 - id: check-added-large-files
                   exclude: |
-                    (?x)^(
-                      ${exclude_size}
-                    )$
+                    (?x)^( ${exclude_size})$
           EOF
 
           echo ".pre-commit-config.yaml contents:"
