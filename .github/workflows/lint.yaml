@@ -38,6 +38,7 @@ jobs:
           # create list of excluded patterns
           exclude_whitespace="
                       .*\.snap|
+                      .*/graphql_types/.*\.ts|
                       common/graphql/possibleTypes\.json
           "
 
