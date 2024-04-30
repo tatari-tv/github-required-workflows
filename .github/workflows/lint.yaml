@@ -35,6 +35,7 @@ jobs:
       - name: create .pre-commit-config.yaml
         shell: bash
         run: |
+          set -x
           # create list of excluded patterns
           read -d '' exclude_whitespace << EOF
           .*\.snap|
