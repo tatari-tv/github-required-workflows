@@ -41,9 +41,17 @@ jobs:
               rev: v4.1.0
               hooks:
                 - id: trailing-whitespace
-                  exclude: '/.*\.snap$'
+                  exclude: |
+                    (?x)^(
+                      /.*\.snap|
+                      common/graphql/possibleTypes.json
+                    )$
                 - id: end-of-file-fixer
-                  exclude: '/.*\.snap$'
+                  exclude: |
+                    (?x)^(
+                      /.*\.snap|
+                      common/graphql/possibleTypes.json
+                    )$
                 - id: check-added-large-files
                   exclude: '^philo/util/trial_accounts/data/.*\.csv$'
           EOF
