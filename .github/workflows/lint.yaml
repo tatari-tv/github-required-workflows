@@ -36,12 +36,12 @@ jobs:
         shell: bash
         run: |
           # create list of excluded patterns
-          read -d exclude_whitespace << EOF
+          read -d '' exclude_whitespace << EOF
           .*\.snap|
           common/graphql/possibleTypes\.json
           EOF
 
-          read -d exclude_size << EOF
+          read -d '' exclude_size << EOF
           philo/util/trial_accounts/data/.*\.csv
           EOF
 
