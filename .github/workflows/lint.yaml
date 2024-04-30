@@ -37,14 +37,14 @@ jobs:
         run: |
           set -x
           # create list of excluded patterns
-          read -d '' exclude_whitespace << EOF
+          exclude_whitespace="
           .*\.snap|
           common/graphql/possibleTypes\.json
-          EOF
+          "
 
-          read -d '' exclude_size << EOF
+          exclude_size="
           philo/util/trial_accounts/data/.*\.csv
-          EOF
+          "
 
           cat > .pre-commit-config.yaml <<EOF
           repos:
