@@ -1,0 +1,47 @@
+name: Tatari Org Security Pre-Check
+
+on:
+  pull_request:
+    types:
+      - 'opened'
+      - 'reopened'
+      - 'synchronize'
+
+permissions:
+  contents: read
+
+env:
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  required-workflows-security-pre-check:
+    name: Required Workflows Security Pre-Check
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: tatari-tv/github-actions/checkout@v5
+      - name: create requirements-lint.txt
+        shell: bash
+        run: |
+          cat > requirements-lint.txt <<EOF
+          pre-commit~=3.1.1
+          EOF
+      - uses: tatari-tv/github-actions/pip-install@v5
+        with:
+          python-version: ${{env.PYTHON_VERSION}}
+          cache-pre-commit: 'true'
+          pypi-username: ${{secrets.CI_USER_PYPI_USERNAME}}
+          pypi-password: ${{secrets.CI_USER_PYPI_PASSWORD}}
+          requirements: requirements-lint.txt
+      - name: create .pre-commit-config-security.yaml
+        shell: bash
+        run: |
+          cat > .pre-commit-config-security.yaml <<EOF
+          repos:
+            - repo: https://github.com/tatari-tv/pre-commit-hooks
+              rev: v1.3.0
+              hooks:
+                - id: gitleaks
+          EOF
+      - name: run pre-commit
+        shell: bash
+        run: pre-commit run --config .pre-commit-config-security.yaml --all-files
