@@ -34,7 +34,10 @@ jobs:
           requirements: requirements-lint.txt
       - name: create .pre-commit-config.yaml
         shell: bash
+        env:
+          REPO: ${{github.event.pull_request.head.repo.full_name}}
         run: |
+          echo $REPO
           # create list of excluded patterns
           exclude_whitespace="
                       .*\.snap|
