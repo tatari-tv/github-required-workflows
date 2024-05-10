@@ -34,17 +34,34 @@ jobs:
           requirements: requirements-lint.txt
       - name: create .pre-commit-config.yaml
         shell: bash
+        env:
+          REPO: ${{github.event.pull_request.head.repo.full_name}}
         run: |
-          # create list of excluded patterns
-          exclude_whitespace="
+          # create list of excluded patterns based on repo
+          case $REPO in
+            "tatari-tv/philo-fe")
+              exclude_whitespace="
                       .*\.snap|
                       .*/graphql_types/.*\.ts|
-                      common/graphql/possibleTypes\.json
-          "
-
-          exclude_size="
-                      philo/util/trial_accounts/data/.*\.csv
-          "
+                      common/graphql/possibleTypes\.json"
+              exclude_size=""
+              ;;
+            "tatari-tv/philo")
+              exclude_whitespace=""
+              exclude_size="
+                      philo/util/trial_accounts/data/.*\.csv"
+              ;;
+            "tatari-tv/grey-matter")
+              exclude_whitespace="
+                      notebook/.*/.*\.py|
+                      .*\.ipynb"
+              exclude_size=""
+              ;;
+            *)
+              exclude_whitespace=""
+              exclude_size=""
+              ;;
+          esac
 
           cat > .pre-commit-config.yaml <<EOF
           repos:
