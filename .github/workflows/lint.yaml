@@ -57,6 +57,11 @@ jobs:
                       .*\.ipynb"
               exclude_size=""
               ;;
+            "tatari-tv/lowess")
+              exclude_whitespace="
+                      cython/lowess.*"
+              exclude_size=""
+              ;;
             *)
               exclude_whitespace=""
               exclude_size=""
