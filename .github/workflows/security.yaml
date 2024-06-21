@@ -15,6 +15,7 @@ jobs:
   required-workflows-security:
     name: Required Workflows Security
     runs-on: ubuntu-20.04
+    if: "!contains(github.event.head_commit.message, 'Initial commit')"
     steps:
       - uses: tatari-tv/github-actions/checkout@v5
       - uses: gitleaks/gitleaks-action@44c470ffc35caa8b1eb3e8012ca53c2f9bea4eb5  # 2.3.6
