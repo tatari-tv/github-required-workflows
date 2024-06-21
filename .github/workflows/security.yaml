@@ -1,3 +1,5 @@
+# security
+
 name: Tatari Org Security
 
 on:
@@ -18,7 +20,16 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'Initial commit')"
     steps:
       - uses: tatari-tv/github-actions/checkout@v5
+      - name: Check for Initial Commit
+        id: check_initial_commit
+        run: |
+          if [ "$(git rev-list --count HEAD)" -eq 1 ]; then
+            echo "initial_commit=true" >> $GITHUB_ENV
+          else
+            echo "initial_commit=false" >> $GITHUB_ENV
+          fi
       - uses: gitleaks/gitleaks-action@44c470ffc35caa8b1eb3e8012ca53c2f9bea4eb5  # 2.3.6
+        if: env.initial_commit == 'false'
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
           GITLEAKS_LICENSE: ${{secrets.GITLEAKS_LICENSE}}
