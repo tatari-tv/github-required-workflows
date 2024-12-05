@@ -44,7 +44,8 @@ jobs:
               exclude_whitespace="
                       .*\.snap|
                       .*/graphql_types/.*\.ts|
-                      common/graphql/possibleTypes\.json"
+                      common/graphql/possibleTypes\.json|
+                      common/graphql/schema\.graphql"
               exclude_size=""
               ;;
             "tatari-tv/philo")
