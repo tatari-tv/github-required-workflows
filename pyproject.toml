@@ -7,7 +7,7 @@ authors = []
 [[tool.poetry.source]]
 name = "tatari"
 url = "https://pypi.tataridev.com/simple/"
-priority = "default"
+priority = "supplemental"
 
 [[tool.poetry.source]]
 name = "PyPI"
