@@ -7,7 +7,7 @@ authors = []
 [[tool.poetry.source]]
 name = "tatari"
 url = "https://pypi.tataridev.com/simple/"
-priority = "default"
+priority = "supplemental"
 
 [[tool.poetry.source]]
 name = "PyPI"
@@ -30,4 +30,4 @@ build-backend = "poetry_dynamic_versioning.backend"
 [tool.black]
 line-length = 140
 skip-string-normalization = true
-target_version = ['py311']
+target-version = ['py311']
