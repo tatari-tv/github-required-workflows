@@ -20,7 +20,7 @@ jobs:
       - id: setup
         uses: tatari-tv/github-actions/poetry-install@v5
         with:
-          codeartifact-role: ${{secrets.PROD_CODEARTIFACT_PUBLISH_ROLE}}
+          codeartifact-role: ${{secrets.PROD_CODEARTIFACT_ROLE}}
           python-version: '3.11'
           poetry-version: '1.7.1'
           pypi-username: ${{secrets.CI_USER_PYPI_USERNAME}}
