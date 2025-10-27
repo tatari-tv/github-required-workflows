@@ -53,12 +53,6 @@ jobs:
               exclude_size="
                       philo/util/trial_accounts/data/.*\.csv"
               ;;
-            "tatari-tv/grey-matter")
-              exclude_whitespace="
-                      notebook/.*/.*\.py|
-                      .*\.ipynb"
-              exclude_size=""
-              ;;
             "tatari-tv/lowess")
               exclude_whitespace="
                       cython/lowess.*"
