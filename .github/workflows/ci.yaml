@@ -1,4 +1,6 @@
 name: ci
+env:
+  POETRY_VERSION: '2.1.3'
 
 on:
   push:
@@ -22,9 +24,7 @@ jobs:
         with:
           codeartifact-role: ${{secrets.PROD_CODEARTIFACT_ROLE}}
           python-version: '3.11'
-          poetry-version: '1.7.1'
-          pypi-username: ${{secrets.CI_USER_PYPI_USERNAME}}
-          pypi-password: ${{secrets.CI_USER_PYPI_PASSWORD}}
+          poetry-version: '${{env.POETRY_VERSION}}'
           cache-pre-commit: 'true'
       - name: Run pre-commit
         run: make lint
