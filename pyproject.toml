@@ -3,15 +3,11 @@ name = "github-required-workflows"
 version = "0.0.0"
 description = ""
 authors = []
+package-mode = false
 
 [[tool.poetry.source]]
 name = "tatari-codeartifact"
 url = "https://tatari-prod-190403256318.d.codeartifact.us-east-1.amazonaws.com/pypi/main/simple/"
-priority = "supplemental"
-
-[[tool.poetry.source]]
-name = "tatari"
-url = "https://pypi.tataridev.com/simple/"
 priority = "supplemental"
 
 [[tool.poetry.source]]

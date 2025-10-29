@@ -30,8 +30,6 @@ jobs:
         with:
           python-version: ${{env.PYTHON_VERSION}}
           cache-pre-commit: 'true'
-          pypi-username: ${{secrets.CI_USER_PYPI_USERNAME}}
-          pypi-password: ${{secrets.CI_USER_PYPI_PASSWORD}}
           requirements: requirements-lint.txt
       - name: create .pre-commit-config.yaml
         shell: bash
