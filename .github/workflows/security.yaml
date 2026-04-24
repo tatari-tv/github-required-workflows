@@ -17,7 +17,16 @@ jobs:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, 'Initial commit')"
     steps:
+      # fetch-depth: "0" — gitleaks does a partial scan by walking
+      # `git log <base>^..<head>`. When a PR's base SHA isn't reachable
+      # from the head (e.g. merges with --allow-unrelated-histories,
+      # rebased branches, or shallow clones), that walk fails with
+      # "fatal: ambiguous argument / unknown revision" and the action
+      # exits 1 even though the fallback partial scan finds no leaks.
+      # Fetching full history removes the class of failure entirely.
       - uses: tatari-tv/github-actions/checkout@v5
+        with:
+          fetch-depth: "0"
       - uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7  # v2.3.9
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
