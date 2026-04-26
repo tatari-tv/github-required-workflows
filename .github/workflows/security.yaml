@@ -17,16 +17,31 @@ jobs:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, 'Initial commit')"
     steps:
-      # fetch-depth: "0" — gitleaks does a partial scan by walking
-      # `git log <base>^..<head>`. When a PR's base SHA isn't reachable
-      # from the head (e.g. merges with --allow-unrelated-histories,
-      # rebased branches, or shallow clones), that walk fails with
-      # "fatal: ambiguous argument / unknown revision" and the action
-      # exits 1 even though the fallback partial scan finds no leaks.
-      # Fetching full history removes the class of failure entirely.
       - uses: tatari-tv/github-actions/checkout@v5
-        with:
-          fetch-depth: "0"
+      # gitleaks-action does a partial scan via `git log <base>^..<head>`.
+      # That walk fails when `<base>^` isn't reachable from the checkout —
+      # i.e. shallow clones whose history doesn't reach the base parent,
+      # or PRs whose base SHA is a root commit (no parent exists). The
+      # action exits 1 even though no leaks were found.
+      #
+      # Healthy PRs (the ~100% case) skip this step in microseconds.
+      # Only the broken case pays the unshallow cost, so philo / philo-fe
+      # CI timing is unaffected.
+      - name: Ensure gitleaks base is reachable
+        if: github.event_name == 'pull_request'
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          if git cat-file -e "${BASE_SHA}^" 2>/dev/null; then
+            echo "Base parent reachable; no extra fetch needed."
+            exit 0
+          fi
+          echo "::notice::Base SHA parent unreachable; deepening history for gitleaks."
+          git fetch --unshallow origin 2>/dev/null \
+            || git fetch --deepen=2147483647 origin 2>/dev/null \
+            || true
       - uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7  # v2.3.9
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
