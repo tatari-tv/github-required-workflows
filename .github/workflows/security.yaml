@@ -18,15 +18,12 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'Initial commit')"
     steps:
       - uses: tatari-tv/github-actions/checkout@v5
-      # gitleaks-action does a partial scan via `git log <base>^..<head>`.
-      # That walk fails when `<base>^` isn't reachable from the checkout —
-      # i.e. shallow clones whose history doesn't reach the base parent,
-      # or PRs whose base SHA is a root commit (no parent exists). The
-      # action exits 1 even though no leaks were found.
-      #
-      # Healthy PRs (the ~100% case) skip this step in microseconds.
-      # Only the broken case pays the unshallow cost, so philo / philo-fe
-      # CI timing is unaffected.
+      # gitleaks-action partial-scans via `git log <base>^..<head>`. That walk
+      # fails in two distinct cases:
+      #   1. Refspec-missing base: actions/checkout fetches only refs/pull/N/head,
+      #      so the base SHA may not be in remote-tracking refs.
+      #   2. Root-commit base: <base>^ doesn't exist, period.
+      # Healthy PRs hit the cat-file check in microseconds and skip the fetch.
       - name: Ensure gitleaks base is reachable
         if: github.event_name == 'pull_request'
         shell: bash
@@ -34,14 +31,15 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
           set -euo pipefail
-          if git cat-file -e "${BASE_SHA}^" 2>/dev/null; then
-            echo "Base parent reachable; no extra fetch needed."
-            exit 0
+          if ! git cat-file -e "${BASE_SHA}" 2>/dev/null; then
+            echo "::notice::Base SHA not in local refs; fetching explicitly."
+            git fetch --no-tags --depth=2147483647 origin \
+              "+${BASE_SHA}:refs/remotes/origin/pr-base" \
+              || git fetch --no-tags --depth=2147483647 origin "${BASE_SHA}"
           fi
-          echo "::notice::Base SHA parent unreachable; deepening history for gitleaks."
-          git fetch --unshallow origin 2>/dev/null \
-            || git fetch --deepen=2147483647 origin 2>/dev/null \
-            || true
+          if ! git cat-file -e "${BASE_SHA}^" >/dev/null 2>&1; then
+            echo "::warning::Base SHA is a root commit; gitleaks partial-scan range is invalid. Follow-up needed to switch to full-scan in this case."
+          fi
       - uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7  # v2.3.9
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
