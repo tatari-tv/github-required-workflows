@@ -38,7 +38,8 @@ jobs:
               || git fetch --no-tags --depth=2147483647 origin "${BASE_SHA}"
           fi
           if ! git cat-file -e "${BASE_SHA}^" >/dev/null 2>&1; then
-            echo "::warning::Base SHA is a root commit; gitleaks partial-scan range is invalid. Follow-up needed to switch to full-scan in this case."
+            echo "::warning::Base SHA is a root commit; gitleaks partial-scan range is invalid."
+            echo "::warning::Follow-up: switch to full-scan mode in this case."
           fi
       - uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7  # v2.3.9
         env:
