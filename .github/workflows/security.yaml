@@ -17,7 +17,15 @@ jobs:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, 'Initial commit')"
     steps:
-      - uses: tatari-tv/github-actions/checkout@v5
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+        with:
+          fetch-depth: 1
+      - name: Deepen checkout for gitleaks scan
+        if: github.event_name == 'pull_request'
+        env:
+          COMMITS: ${{ github.event.pull_request.commits }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: git fetch --depth=$(( COMMITS + 1 )) origin pull/$PR_NUMBER/head
       - uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7  # v2.3.9
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
