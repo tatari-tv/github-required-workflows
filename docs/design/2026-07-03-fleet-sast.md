@@ -20,10 +20,11 @@ mechanism gitleaks already uses.
 ### Background
 
 The `tatari-tv` org has a working fleet-wide security-gate mechanism:
-`github-required-workflows` defines workflows (`security.yaml` = "Tatari Org
-Security", `lint.yaml` = "Tatari Org Lint") that GitHub org ruleset **#126206**
-("require workflows to pass before merging") forces onto every repo. Public
-repos are excluded from that ruleset. "Tatari Org Security" runs
+`github-required-workflows` defines the required workflow `security.yaml` =
+"Tatari Org Security" (a `lint.yaml` = "Tatari Org Lint" existed but was removed
+when this repo was prepared for public visibility) that GitHub org ruleset
+**#126206** ("require workflows to pass before merging") forces onto every repo.
+Public repos are excluded from that ruleset. "Tatari Org Security" runs
 `gitleaks-action` with a licensed `GITLEAKS_LICENSE` secret, so the org already
 (a) enforces a security check on every PR and (b) pays for a commercial security
 tool. There is no prose "security policy" document: the policy *is* the ruleset
@@ -91,8 +92,7 @@ untouched.
 
 ```
 GitHub org ruleset #126206  ── requires ──▶  Tatari Org Security (gitleaks, BLOCKING)
-   (private repos)                     └──▶  Tatari Org Lint
-                                       └──▶  Tatari Org SAST  ◀── NEW, NON-BLOCKING
+   (private repos)                     └──▶  Tatari Org SAST  ◀── NEW, NON-BLOCKING
                                                  │
                     ┌────────────────────────────┼────────────────────────────┐
                     ▼                             ▼                             ▼
