@@ -1,0 +1,17 @@
+# CANARY (mode 1: findings path). Throwaway test workflow on branch
+# sast-canary-tests only. A continue-on-error job that exits non-zero, exactly
+# as a scanner does when it surfaces a finding. Hypothesis: run conclusion =
+# success (the guard absorbs a finding), so this mode would NOT block a merge.
+name: canary-findings
+on:
+  push:
+    branches: [sast-canary-tests]
+jobs:
+  findings:
+    name: findings (guarded)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - run: |
+          echo "simulating a scanner FINDING: non-zero exit under continue-on-error"
+          exit 1

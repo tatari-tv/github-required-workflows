@@ -1,0 +1,15 @@
+# CANARY (mode 4: forced timeout). Throwaway. timeout-minutes: 1 with a step
+# that sleeps past it, under continue-on-error. Question: does the guard absorb
+# a timed-out job (run success) or does the timeout fail/cancel the run?
+name: canary-timeout
+on:
+  push:
+    branches: [sast-canary-tests]
+jobs:
+  timeout:
+    name: timeout (guarded)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    timeout-minutes: 1
+    steps:
+      - run: sleep 120

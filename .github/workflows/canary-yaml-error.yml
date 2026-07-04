@@ -1,0 +1,17 @@
+# CANARY (mode 2: YAML/syntax error). Throwaway. The unclosed flow mapping on
+# the `with:` line is a hard YAML parse error. Hypothesis: GitHub cannot parse
+# the file, so continue-on-error never applies; in a required-workflow context
+# this surfaces as startup_failure and BLOCKS. (Repo-local, this may show only
+# as an "invalid workflow file" annotation with no queryable run -- confirm the
+# gate effect in test bed C.)
+name: canary-yaml-error
+on:
+  push:
+    branches: [sast-canary-tests]
+jobs:
+  broken:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - run: echo hi
+        with: {

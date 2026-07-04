@@ -1,0 +1,16 @@
+# CANARY (mode 3: unresolvable action). Throwaway. Points a step at an action
+# ref that does not exist. continue-on-error is set TRUE on purpose: the
+# question is whether the guard protects against a resolution failure.
+# Hypothesis: NO -- action resolution happens before the job runs, so the run
+# concludes failure despite continue-on-error, and this mode BLOCKS.
+name: canary-bad-uses
+on:
+  push:
+    branches: [sast-canary-tests]
+jobs:
+  baduses:
+    name: bad uses (guarded)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: tatari-tv/this-action-does-not-exist@v9

@@ -1,0 +1,14 @@
+# CANARY (mode 5: cancellation). Throwaway. A long sleep so the run can be
+# cancelled mid-flight via `gh run cancel`, to record the resulting conclusion
+# (expected: cancelled) and its merge-gate effect.
+name: canary-cancel
+on:
+  push:
+    branches: [sast-canary-tests]
+jobs:
+  longrun:
+    name: long run (guarded)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - run: sleep 300

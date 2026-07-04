@@ -1,0 +1,14 @@
+# CANARY (mode 6: un-guarded job). Throwaway. A job WITHOUT continue-on-error
+# that fails. Hypothesis: run concludes failure and this mode BLOCKS -- proving
+# the guard is per-job and any future job added to sast.yaml without the line
+# silently re-arms merge blocking. This is the fragility to document.
+name: canary-unguarded
+on:
+  push:
+    branches: [sast-canary-tests]
+jobs:
+  unguarded:
+    name: unguarded (no continue-on-error)
+    runs-on: ubuntu-latest
+    steps:
+      - run: exit 1
