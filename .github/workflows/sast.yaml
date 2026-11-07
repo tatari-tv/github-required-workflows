@@ -179,6 +179,10 @@ jobs:
       # action keeps this resolvable in ANY context (repo-local test CI or
       # org-injected required workflow) without depending on internal-action access.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          # The next step runs a freshly downloaded Trivy binary; leave no job
+          # token in .git/config for it to read. The scan needs no git auth.
+          persist-credentials: false
 
       # Latest Trivy straight from the GitHub release, checksum-verified. The
       # action's own installer (setup-trivy) pulls the tarball from get.trivy.dev,
