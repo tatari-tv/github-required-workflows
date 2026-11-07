@@ -180,9 +180,37 @@ jobs:
       # org-injected required workflow) without depending on internal-action access.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
 
+      # Latest Trivy straight from the GitHub release, checksum-verified. The
+      # action's own installer (setup-trivy) pulls the tarball from get.trivy.dev,
+      # which stopped resolving on 2026-11-03 (aquasecurity/trivy#11537). The
+      # GitHub API route (`gh release download`) is refused too: the aquasecurity
+      # org has an IP allow list, so an authenticated API call from a hosted
+      # runner gets HTTP 403. This step uses only github.com web URLs with no
+      # token: the releases/latest redirect names the tag, and the asset URLs
+      # under releases/download serve the files. No version is pinned on purpose.
+      - name: Install Trivy (latest GitHub release)
+        run: |
+          set -euo pipefail
+          base=https://github.com/aquasecurity/trivy/releases
+          tag=$(curl -fsSI -o /dev/null -w '%{redirect_url}' "$base/latest")
+          tag=${tag##*/}
+          [[ "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "unexpected latest tag: '$tag'" >&2; exit 1; }
+          ver=${tag#v}
+          dir="$RUNNER_TEMP/trivy"
+          mkdir -p "$dir"
+          tarball="trivy_${ver}_Linux-64bit.tar.gz"
+          sums="trivy_${ver}_checksums.txt"
+          curl -fsSL --retry 3 -o "$dir/$tarball" "$base/download/$tag/$tarball"
+          curl -fsSL --retry 3 -o "$dir/$sums" "$base/download/$tag/$sums"
+          (cd "$dir" && grep " $tarball\$" "$sums" | sha256sum -c -)
+          tar -xzf "$dir/$tarball" -C "$dir" trivy
+          echo "$dir" >> "$GITHUB_PATH"
+          "$dir/trivy" --version
+
       - name: Scan filesystem (vuln + misconfig; secrets OFF per Q5)
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25  # v0.36.0
         with:
+          skip-setup-trivy: 'true'  # binary installed above
           scan-type: fs
           scan-ref: .
           scanners: vuln,misconfig
